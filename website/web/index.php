@@ -1,7 +1,7 @@
 <?php
 
 error_reporting(E_ALL); //PHP will show all error messages
-
+use ihrname\Controller\LoginController;
 require_once("../vendor/autoload.php"); //Autoloading 
 $tmpl = new ihrname\SimpleTemplateEngine(__DIR__ . "/../templates/"); //For building webpages
 
@@ -9,12 +9,9 @@ switch($_SERVER["REQUEST_URI"]) {
 	case "/": //Homepage
 		(new ihrname\Controller\IndexController($tmpl))->homepage();
 		break;
-	case "/Chantal/Ochiai":
-			echo "You're the best ;D";
+	case "/login":
+		(new LoginController($tmpl))->showLogin();
 		break;
-	case "/testroute":
-			echo "TEST";
-					break;
 	default:
 		$matches = [];
 		if(preg_match("|^/hello/(.+)$|", $_SERVER["REQUEST_URI"], $matches)) {
