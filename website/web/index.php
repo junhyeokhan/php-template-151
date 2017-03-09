@@ -1,20 +1,16 @@
 <?php
 
-error_reporting(E_ALL);
+error_reporting(E_ALL); //PHP will show all error messages
 
-require_once("../vendor/autoload.php");
-$tmpl = new ihrname\SimpleTemplateEngine(__DIR__ . "/../templates/");
+require_once("../vendor/autoload.php"); //Autoloading 
+$tmpl = new ihrname\SimpleTemplateEngine(__DIR__ . "/../templates/"); //For building webpages
 
 switch($_SERVER["REQUEST_URI"]) {
-	case "/":
+	case "/": //Homepage
 		(new ihrname\Controller\IndexController($tmpl))->homepage();
 		break;
-	case "/test/upload":
-		if(file_put_contents(__DIR__ . "/../../upload/test.txt", "Mein erster Upload")) {
-			echo "It worked";
-		} else {
-			echo "Error happened";
-		}
+	case "/Chantal/Ochiai":
+			echo "You're the best ;D";
 		break;
 	default:
 		$matches = [];
@@ -25,3 +21,4 @@ switch($_SERVER["REQUEST_URI"]) {
 		echo "Not Found";
 }
 
+?>
