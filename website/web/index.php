@@ -12,6 +12,9 @@ switch($_SERVER["REQUEST_URI"]) {
 	case "/Chantal/Ochiai":
 			echo "You're the best ;D";
 		break;
+	case "/testroute":
+			echo "TEST";
+					break;
 	default:
 		$matches = [];
 		if(preg_match("|^/hello/(.+)$|", $_SERVER["REQUEST_URI"], $matches)) {
