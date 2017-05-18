@@ -33,7 +33,7 @@ class RegisterPdoService implements RegisterServiceInterface
 			$stmt->bindValue(1, $username);
 			$hash = password_hash($password, PASSWORD_DEFAULT);
 			//password_verify($password, $hash);
-			$stmt->bindValue(2, $hash);
+			$stmt->bindValue(2, $password);
 			$stmt->execute();
 		
 		if($stmt->rowCount() == 1)
