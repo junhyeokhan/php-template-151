@@ -10,7 +10,7 @@ $factory = new junhyeokhan\Factory($config);
 
 switch($_SERVER["REQUEST_URI"]) {
 	case "/": //Homepage
-		$factory->getIndexController()->homepage();
+		$factory->getIndexController()->renderHompage();
 		break;
 		
 	case "/login":
@@ -26,6 +26,19 @@ switch($_SERVER["REQUEST_URI"]) {
 		}
 		break;
 		
+	case "/register":
+		$controller = $factory->getRegisterController();
+		
+		if ($_SERVER["REQUEST_METHOD"] === "GET")
+		{
+			$controller->showRegister();
+		}
+		else
+		{
+			$controller->register($_POST);
+		}
+		break;
+	
 	//../../../../../../../../../etc/passwd
 	case "/weak":
 		$template = 'hello.html.php';
@@ -47,15 +60,11 @@ switch($_SERVER["REQUEST_URI"]) {
 			die();
 		}
 		include (__DIR__ . "/../templates/" . $template);
+		
 		break;
 		
 	default:
-		$matches = [];
-		if(preg_match("|^/hello/(.+)$|", $_SERVER["REQUEST_URI"], $matches)) {
-			$factory->getIndexController()->greet($matches[1]);
-			break;
-		}
-		echo "Not Found";
+		header("HTTP/1.1 404 Not Found");
 }
 
 ?>

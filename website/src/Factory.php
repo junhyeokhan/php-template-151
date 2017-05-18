@@ -23,6 +23,14 @@ class Factory {
 			$this->getLoginService()
 		);
 	}
+
+	public function getRegisterController()
+	{
+		return new Controller\RegisterController(
+				$this->getTemplateEngine(),
+				$this->getRegisterService()
+				);
+	}
 	
 	public function getTemplateEngine()
 	{
@@ -50,7 +58,14 @@ class Factory {
 	
 	public function getLoginService()
 	{
-		return new Service\LoginMysqlService(
+		return new Service\Login\LoginPdoService(
+			$this->getPdo()		
+		);
+	}
+	
+	public function getRegisterService()
+	{
+		return new Service\Register\RegisterPdoService(
 			$this->getPdo()		
 		);
 	}

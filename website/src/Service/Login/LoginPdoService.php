@@ -23,7 +23,17 @@ class LoginPdoService implements LoginServiceInterface
 		$stmt->bindValue(1, $username);
 		$stmt->bindValue(2, $password);
 		$stmt->execute();
-		 
-		return $stmt->rowCount() == 1;	 
+		
+		
+		
+		if($stmt->rowCount() == 1)
+		{
+			$_SESSION["email"] = $data["email"];
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
