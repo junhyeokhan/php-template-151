@@ -23,7 +23,7 @@ class RegisterPdoService implements RegisterServiceInterface
 		$stmt->bindValue(1, $username);
 
 		//Is email already existing?
-		if ($stml->rowCount() > 0)
+		if ($stmt->rowCount() > 0)
 		{
 			$_SESSION["register"]["error"] = "A user with entered email is already existing!";
 		}
@@ -33,7 +33,7 @@ class RegisterPdoService implements RegisterServiceInterface
 			$stmt->bindValue(1, $username);
 			$hash = password_hash($password, PASSWORD_DEFAULT);
 			//password_verify($password, $hash);
-			$stmt->bindValue(2, $password);
+			$stmt->bindValue(2, $hash);
 			$stmt->execute();
 		
 		if($stmt->rowCount() == 1)
