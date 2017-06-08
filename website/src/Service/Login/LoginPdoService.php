@@ -17,24 +17,38 @@ class LoginPdoService implements LoginServiceInterface
 		$this->pdo = $pdo;
 	}
 	
-	public function authenticate($username, $password)
+	public function authenticate($email, $password)
 	{		
 		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE email=?");
-		$stmt->bindValue(1, $username);
+		$stmt->bindValue(1, $email);
 		$stmt->execute();
 		
 		$isPasswordTrue = false;
 		
-		//Username is not existing
 		if ($stmt->rowCount() >= 1)
 		{
-			$hash = $stmt->fetchColumn(2);
+			$hash = $stmt->fetchColumn(3);
 			$isPasswordTrue = password_verify($password, $hash);
+			
+			$personId = $stmt->fetchColumn(1);
 		}
 		
 		if($isPasswordTrue)
 		{
-			$_SESSION["email"] = $username;
+			$stmt = $this->pdo->prepare("SELECT * FROM person WHERE Id=?");
+			$stmt->execute([$personId]);
+			
+			$gender = $stmt->fetchAll();
+			$lastName = $stmt->fetchColumn(3);
+			
+			echo $gender;
+			echo $lastName;
+			die();
+			
+			$_SESSION["user"]["email"] = $email;			
+			$_SESSION["user"]["name"] = $lastName;
+			$_SESSION["user"]["gender"] = $gender;
+			
 			return true;
 		}
 		else

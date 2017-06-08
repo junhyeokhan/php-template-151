@@ -45,7 +45,7 @@ class RegisterController
   		return;
   	}
   	
-  	if ($this->registerService->register($data["email"], $data["password"]))
+  	if ($this->registerService->register($data["email"], $data["password"], $data["firstName"], $data["lastName"],  $data["gender"], $data["dateOfBirth"]))
   	{
   		$_SESSION["successMessage"]["register"] = "Register succeeded!";
   		$this->showSuccess();

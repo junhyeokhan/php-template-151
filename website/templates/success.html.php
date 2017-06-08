@@ -6,8 +6,14 @@ if (isset($_SESSION["successMessage"]["register"]))
 }
 ?>
 </h1>
-<h2>
+<div>
 	<?php 
-		
+		if (isset($_SESSION["successMessage"]["register"]))
+		{
 	?>
-</h2>
+		<p>To <a href="/login">Login</a> page</p>
+		<p>To <a href="/">Home</a> page</p>
+	<?php 
+		}
+	?>
+</div>

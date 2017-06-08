@@ -17,10 +17,10 @@ class RegisterPdoService implements RegisterServiceInterface
 		$this->pdo = $pdo;
 	}
 	
-	public function register($username, $password)
+	public function register($email, $password, $firstName, $lastName,  $gender, $dateOfBirth)
 	{
 		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE email = ?");
-		$stmt->bindValue(1, $username);
+		$stmt->bindValue(1, $email);
 
 		//Is email already existing?
 		if ($stmt->rowCount() > 0)
@@ -29,23 +29,22 @@ class RegisterPdoService implements RegisterServiceInterface
 		}
 		else
 		{
-			$stmt = $this->pdo->prepare("INSERT INTO user (email, password) VALUES (?, ?)");
-			$stmt->bindValue(1, $username);
-			$hash = password_hash($password, PASSWORD_DEFAULT);
-			//password_verify($password, $hash);
-			$stmt->bindValue(2, $hash);
-			$stmt->execute();
-		
-		if($stmt->rowCount() == 1)
-		{
-			$_SESSION["email"] = $username;
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+
+			$stmt = $this->pdo->prepare("INSERT INTO person (FirstName, LastName, Gender, DateOfBirth) VALUES (?, ?, ?, ?)");
+			$stmt->execute([$firstName, $lastName, $gender, $dateOfBirth]);
 			
+			$personId = $this->pdo->lastInsertId();
+			
+			$stmt = $this->pdo->prepare("INSERT INTO user (email, password, person_Id) VALUES (?, ?, ?)");
+
+			$hash = password_hash($password, PASSWORD_DEFAULT);
+			
+			$stmt->bindValue(1, $email);
+			$stmt->bindValue(2, $hash);
+			$stmt->bindValue(3, $personId);
+			$stmt->execute();			
+			
+			return $stmt->rowCount() == 1;			
 		}
 		
 		
