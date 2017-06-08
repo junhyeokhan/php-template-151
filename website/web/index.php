@@ -26,6 +26,13 @@ switch($_SERVER["REQUEST_URI"]) {
 		}
 		break;
 		
+	case "/logout":
+		$controller = $factory->getLoginController();
+		$controller->logout();
+
+		$factory->getIndexController()->renderHompage();
+		break;
+		
 	case "/register":
 		$controller = $factory->getRegisterController();
 		
@@ -39,6 +46,20 @@ switch($_SERVER["REQUEST_URI"]) {
 		}
 		break;
 	
+	case "/budget":
+		
+		if (isset($_SESSION["user"]))
+		{
+			$controllre = $factory->getBudgetController();
+		}
+		else
+		{
+			$controller = $factory->getLoginController();
+			$controller->showLogin();
+		}
+		
+		break;
+		
 	//../../../../../../../../../etc/passwd
 	case "/weak":
 		$template = 'hello.html.php';

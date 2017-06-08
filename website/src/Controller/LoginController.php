@@ -41,6 +41,10 @@ class LoginController
   	} else {
   		echo $this->template->render("login.html.php", ["email" => $data["email"]]);
   	}
-  	
+  }
+  
+  public function logout()
+  {
+  	unset($_SESSION['user']);
   }
 }

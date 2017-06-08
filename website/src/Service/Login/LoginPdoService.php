@@ -27,32 +27,32 @@ class LoginPdoService implements LoginServiceInterface
 		
 		if ($stmt->rowCount() >= 1)
 		{
-			$hash = $stmt->fetchColumn(3);
-			$isPasswordTrue = password_verify($password, $hash);
+			$userData = $stmt->fetchAll();
 			
-			$personId = $stmt->fetchColumn(1);
+			$personId = $userData[0]['person_Id'];
+			$hash = $userData[0]['password'];
+			$isPasswordTrue = password_verify($password, $hash);
 		}
-		
 		if($isPasswordTrue)
-		{
+		{			
 			$stmt = $this->pdo->prepare("SELECT * FROM person WHERE Id=?");
 			$stmt->execute([$personId]);
 			
-			$gender = $stmt->fetchAll();
-			$lastName = $stmt->fetchColumn(3);
+			$personalData = $stmt->fetchAll();
 			
-			echo $gender;
-			echo $lastName;
-			die();
+			$gender = $personalData[0]['Gender'];
+			$firstName = $personalData[0]['FirstName'];
+			$lastName = $personalData[0]['LastName'];
 			
 			$_SESSION["user"]["email"] = $email;			
-			$_SESSION["user"]["name"] = $lastName;
+			$_SESSION["user"]["firstName"] = $firstName;
+			$_SESSION["user"]["lastName"] = $lastName;
 			$_SESSION["user"]["gender"] = $gender;
 			
 			return true;
 		}
 		else
-		{
+		{		
 			return false;
 		}
 	}

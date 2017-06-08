@@ -25,16 +25,27 @@
 			
 			if (isset($_SESSION["user"]["gender"]))
 			{
-				echo $_SESSION["user"]["gender"];			
+				if ($_SESSION["user"]["gender"] == "Male")
+				{
+					echo "Mr. ";	
+				}
+				else if ($_SESSION["user"]["gender"] == "Female")
+				{
+					echo "Ms. ";
+				}		
 			}
 			
-			if (isset($_SESSION["user"]["name"]))
+			if (isset($_SESSION["user"]["lastName"]))
 			{
-				echo $_SESSION["user"]["name"];
+				echo $_SESSION["user"]["lastName"];
 			}
+			
+			echo "!";
 		?>
 	</h1>
 	
+	<a href=/budeget>Budget</a>
+	<a href=/logout>Logout</a>
 
 <?php 
 	}
