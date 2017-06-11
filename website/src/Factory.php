@@ -39,6 +39,13 @@ class Factory {
 				$this->getConfigurationService());
 	}
 	
+	public function getBudgetController()
+	{
+		return new Controller\BudgetController(
+				$this->getTemplateEngine(),
+				$this->getBudgetService());
+	}
+	
 	public function getTemplateEngine()
 	{
 		return new SimpleTemplateEngine(__DIR__ . "/../templates/");
@@ -82,5 +89,10 @@ class Factory {
 		return new Service\Configuration\ConfigurationPdoService(
 			$this->getPdo()
 		);
+	}
+	
+	public function getBudgetService()
+	{
+		return new Service\Budget\BudgetPdoService($this->getPdo());
 	}
 }

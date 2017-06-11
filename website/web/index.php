@@ -51,6 +51,7 @@ switch($_SERVER["REQUEST_URI"]) {
 		if (isset($_SESSION["user"]))
 		{
 			$controller = $factory->getBudgetController();
+			$controller->showBudget(date("Y"), date("m"));
 		}
 		else
 		{
