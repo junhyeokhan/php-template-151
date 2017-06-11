@@ -50,7 +50,7 @@ switch($_SERVER["REQUEST_URI"]) {
 		
 		if (isset($_SESSION["user"]))
 		{
-			$controllre = $factory->getBudgetController();
+			$controller = $factory->getBudgetController();
 		}
 		else
 		{
@@ -58,6 +58,21 @@ switch($_SERVER["REQUEST_URI"]) {
 			$controller->showLogin();
 		}
 		
+		break;
+		
+	case "/configuration":
+		if (isset($_SESSION["user"]))
+		{
+			$controller = $factory->getConfigurationController();
+			if ($_SERVER["REQUEST_METHOD"] === "GET")
+			{
+				$controller->showConfiguration();
+			}
+			else
+			{
+				$controller->saveConfiguration($_POST);
+			}
+		}
 		break;
 		
 	//../../../../../../../../../etc/passwd

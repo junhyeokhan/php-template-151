@@ -37,7 +37,7 @@ class LoginController
   	
   	if ($this->loginService->authenticate($data["email"], $data["password"]))
   	{
-  		header("Location: /"); 
+  			header("Location: /");
   	} else {
   		echo $this->template->render("login.html.php", ["email" => $data["email"]]);
   	}

@@ -44,8 +44,10 @@
 		?>
 	</h1>
 	
+	<a href=/configuration>Configuration</a>
 	<a href=/budeget>Budget</a>
 	<a href=/logout>Logout</a>
+	
 
 <?php 
 	}

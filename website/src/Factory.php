@@ -32,6 +32,13 @@ class Factory {
 				);
 	}
 	
+	public function getConfigurationController()
+	{
+		return new Controller\ConfigurationController(
+				$this->getTemplateEngine(), 
+				$this->getConfigurationService());
+	}
+	
 	public function getTemplateEngine()
 	{
 		return new SimpleTemplateEngine(__DIR__ . "/../templates/");
@@ -67,6 +74,13 @@ class Factory {
 	{
 		return new Service\Register\RegisterPdoService(
 			$this->getPdo()		
+		);
+	}
+	
+	public function getConfigurationService()
+	{
+		return new Service\Configuration\ConfigurationPdoService(
+			$this->getPdo()
 		);
 	}
 }
