@@ -2,7 +2,18 @@
 <h2>
 	Configure your budget planner.
 </h2>
-<p>First thing first! Please configure your budget knight! This configuration could be changed again anytime.</p>
+<p>
+	<?php 
+		if (isset($_SESSION["errorMessage"]["configuration"]))
+		{
+			echo $_SESSION["errorMessage"]["configuration"];
+		}
+		else
+		{
+			echo "First thing first! Please configure your budget knight! This configuration could be changed again anytime.";
+		}
+	?>
+</p>
 <form method="POST">
 	<fieldset>
 		<legend>Configuration</legend>
