@@ -19,7 +19,7 @@ class IndexController
      $this->template = $template;
   }
 
-  public function renderHompage() {
-  	echo $this->template->render("home.html.php");
+  public function renderHompage($statistics) {
+  	echo $this->template->render("home.html.php", $statistics);
   }
 }

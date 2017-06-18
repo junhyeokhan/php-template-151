@@ -1,3 +1,6 @@
+<?php
+	include 'shared/header.html.php';
+?>
 <h1>Configuration</h1>
 <h2>
 	Configure your budget planner.
@@ -52,3 +55,6 @@
 	    };
 	}
 </script>
+<?php 
+	include 'shared/footer.html.php';
+?>

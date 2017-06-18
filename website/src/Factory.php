@@ -46,6 +46,14 @@ class Factory {
 				$this->getBudgetService());
 	}
 	
+	public function getStatisticsController()
+	{
+		return new Controller\StatisticsController(
+				$this->getTemplateEngine(),
+				$this->getConfigurationService(),
+				$this->getBudgetService());
+	}
+	
 	public function getTemplateEngine()
 	{
 		return new SimpleTemplateEngine(__DIR__ . "/../templates/");

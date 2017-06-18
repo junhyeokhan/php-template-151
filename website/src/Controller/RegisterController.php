@@ -47,7 +47,7 @@ class RegisterController
   	
   	if ($this->registerService->register($data["email"], $data["password"], $data["firstName"], $data["lastName"],  $data["gender"], $data["dateOfBirth"]))
   	{
-  		$_SESSION["successMessage"]["register"] = "Register succeeded!";
+  		$_SESSION["register"]["success"] = "Register succeeded!";
   		header("Location: \login");
   	} else {
   		$_SESSION["errorMessage"]["register"] = "Register failed! Please try again!";

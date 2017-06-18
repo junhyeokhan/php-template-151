@@ -10,7 +10,11 @@ $factory = new junhyeokhan\Factory($config);
 
 switch($_SERVER["REQUEST_URI"]) {
 	case "/": //Homepage
-		$factory->getIndexController()->renderHompage();
+		if (isset($_SESSION["user"]))
+		{
+			$statistics = $factory->getStatisticsController()->getStatistics($_SESSION["user"]["email"], date("Y"), date("m"));
+		}
+		$factory->getIndexController()->renderHompage($statistics);
 		break;
 		
 	case "/login":
@@ -80,6 +84,11 @@ switch($_SERVER["REQUEST_URI"]) {
 			{
 				$controller->saveConfiguration($_POST);
 			}
+		}
+		else
+		{
+			$controller = $factory->getLoginController();
+			$controller->showLogin();
 		}
 		break;
 		

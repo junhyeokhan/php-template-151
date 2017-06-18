@@ -1,0 +1,94 @@
+body{
+	width: 80%;
+	margin: 10 auto;
+	background-color: #eeeeee;
+	font-family: sans-serif;
+}
+
+.header {
+	height: 100px;
+	background-color: white;
+	text-align: center;
+}
+
+.navigation {
+	heigt: 50px;	
+	background-color: white;
+}
+
+.navigation > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+}
+
+.navigation > ul > li {
+    float: left;
+}
+
+.navigation > ul > li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navigation ul li a:hover {
+    background-color: #111111;
+}
+
+.logo {
+	height: 100px
+}
+
+.content {
+	background-color: white;
+	padding: 20px;
+}
+
+h1 {
+	margin: 0;
+}
+
+fieldset {
+	margin: 10px;
+}
+
+label {
+	width: 100px;
+	display: inline-block;
+	text-align: right;
+}
+
+input {
+	display: inline-block;
+	width: 200px;
+}
+
+.radio {
+	margin-left: 100px;
+}
+
+.radio label {
+	width: 100px;
+}
+
+.radio input {
+	width: 100px;
+	margin: 0;
+}
+
+.button {
+	margin-left: 104px;
+}
+
+.button-fieldset {
+	margin-left: 128px;
+}
+
+form div {
+	margin-top: 5px;
+}

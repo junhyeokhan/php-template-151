@@ -1,28 +1,27 @@
-<!DOCTYPE>
-<html>
-	<head>
-		<title>Login form</title>
-	</head>
-	<body>
-		<h1>Login</h1>
-		<h2>
-		<?php 
-			if (isset($_SESSION["successMessage"]["register"]))
-			{
-				echo "Thank you for registering!";
-			}
-		?>
-		</h2>
-		<form method="POST">
-			<label>
-				Email:
-				<input type="email" name="email">
-			</label>
-			<label>
-				Password:
-				<input type="password" name="password">
-			</label>
-			<input value="Login" type="submit" name="submit">
-		</form>
-	</body>
-</html>
+<?php
+	include 'shared/header.html.php';
+?>
+<h1>Login</h1>
+<h2>
+	<?php
+		if (isset($_SESSION["register"]["success"])) {
+			echo $_SESSION["register"]["success"];
+		}
+	?>
+</h2>
+<form method="POST">
+	<div>
+		<label>Email: </label>
+		<input type="email" name="email">
+	</div>
+	<div>
+		<label>Password: </label>
+		<input type="password" name="password">
+	</div>
+	<div class="button">
+		<input value="Login" type="submit" name="submit">
+	</div>
+</form>
+<?php
+	include 'shared/footer.html.php';
+?>
