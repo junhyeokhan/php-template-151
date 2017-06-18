@@ -92,3 +92,29 @@ input {
 form div {
 	margin-top: 5px;
 }
+
+.chart-block {
+	width: 40%;
+	float: left;
+	margin: 0% 5%;
+	text-align: center;
+}
+
+.chart-block label {
+	display: block;
+}
+
+.clear {
+	clear: both;
+}
+
+.chart-legend {
+	border-radius: 5px;
+	padding: 10px 0px;
+    background: #eeeeee;
+    margin-bottom: 20px;
+}
+
+.chart-legend i {
+	margin: 0px 5px;
+}

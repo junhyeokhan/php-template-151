@@ -32,7 +32,7 @@ class StatisticsController
   	
   	$configuration = $this->configurationService->getConfiguration($email);
   	$budgetThisMonth = $this->budgetService->getBudget($email, $year, $month);
-  
+  	
   	//Monthly amount statistic
   	$totalAmount = $configuration[0]['monthlyBudget'];
   	
@@ -57,6 +57,21 @@ class StatisticsController
   	$statistics['monthly']['free'] = $freeAmount;
   	$statistics['monthly']['used'] = $usedAmount;
   	$statistics['monthly']['over'] = $exceededAmount;
+  	
+  	//Monthly category statistic  	
+  	$allCategories = array_column($budgetThisMonth, 'name');
+
+  	foreach ($allCategories as $category)
+  	{
+  		$statistics['categories'][$category] = 0;
+	  	foreach	($budgetThisMonth as $entry)
+	  	{
+	  		if ($entry['name'] == $category)
+	  		{
+	  			$statistics['categories'][$category] += $entry['amountOfMoney'];
+	  		}
+	  	}
+  	}
   	
   	return $statistics;
   }
