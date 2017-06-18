@@ -45,9 +45,17 @@ class BudgetPdoService implements BudgetServiceInterface
 						$dateFrom = date("Y-m-t", strtotime());
 						break;
 					case 'userDate' :
-						$day = $data['resetDate'];
-						$dateFrom = mktime(0, 0, 0, date("m"), $day, date("Y"));
-						$dateTo = mktime(0, 0, 0, date("m")+1, $day, date("Y"));
+						$day = $data[0]['resetDate'];
+						if (date("d") >= $day)
+						{
+							$dateFrom = date('Y-m-d H:i:s', mktime(0, 0, 0, date("m"), $day, date("Y")));
+							$dateTo = date('Y-m-d H:i:s', mktime(0, 0, 0, date("m")+1, $day, date("Y")));
+						}
+						else
+						{
+							$dateFrom = date('Y-m-d H:i:s', mktime(0, 0, 0, date("m")-1, $day, date("Y")));
+							$dateTo = date('Y-m-d H:i:s', mktime(0, 0, 0, date("m"), $day, date("Y")));
+						}
 						break;
 					default :
 						break;
@@ -77,24 +85,70 @@ class BudgetPdoService implements BudgetServiceInterface
 		return $stmt->fetchAll();
 	}
 	
-	public function saveEntry($email, $date, $amountOfMoney, $description, $categoryId)
+	public function saveEntry($data, $email)
 	{
-		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE email=?");
-		$stmt->execute([$email]);
+	  	$date = $data['date'];
+	  	$amountOfMoney = $data['amountOfMoney'];
+	  	$description = $data['description'];
+	  	$categoryId = $data['category'];
+	  	
+	  	if (array_key_exists("entry_Id",$data))
+	  	{
+	  		$entryId = $data['entry_Id'];
+	  	}
+	  	else
+	  	{
+	  		$entryId = 0;
+	  	}
+	  	
+	  	if ($entryId > 0)
+	  	{
+	  		$stmt = $this->pdo->prepare("UPDATE entry SET date = ?, amountOfMoney = ?, description = ?, category_Id = ? WHERE entry_Id = ?");
+	  		$stmt->execute([$date, $amountOfMoney, $description, $categoryId, $entryId]);
+	  		return $stmt->rowCount() == 1;
+	  	}
+	  	else
+	  	{
+	  		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE email=?");
+	  		$stmt->execute([$email]);
+	  		
+	  		$user = $stmt->fetchAll();
+	  		
+	  		if (count($user) > 0)
+	  		{
+	  			$userId = $user[0]['Id'];
+	  				
+	  			$stmt = $this->pdo->prepare("INSERT INTO entry (category_Id, user_Id, amountOfMoney, description, date) VALUES (?, ?, ?, ?, ?)");
+	  			$stmt->execute([$categoryId, $userId, $amountOfMoney, $description, $date]);
+	  			return $stmt->rowCount() == 1;
+	  		}
+	  		else
+	  		{
+	  			return 0;
+	  		}
+	  	}
+	}
+	
+	public function getEntry($entry_Id)
+	{
+		$stmt = $this->pdo->prepare("SELECT * FROM entry WHERE entry_Id=?");
+		$stmt->execute([$entry_Id]);
 		
-		$user = $stmt->fetchAll();
+		$entry = $stmt->fetchAll();
 		
-		if (count($user) > 0)
+		if (count($entry) > 0)
 		{
-			$userId = $user[0]['Id'];
-			
-			$stmt = $this->pdo->prepare("INSERT INTO entry (category_Id, user_Id, amountOfMoney, description, date) VALUES (?, ?, ?, ?, ?)");
-			$stmt->execute([$categoryId, $userId, $amountOfMoney, $description, $date]);
-			return $stmt->rowCount() == 1;
+			return $entry;
 		}
 		else
 		{
-			return 0;
+			return false;
 		}
+	}
+	
+	public function deleteEntry($entryId)
+	{
+		$stmt = $this->pdo->prepare("DELETE FROM entry WHERE entry_Id=$entryId");
+		$stmt->execute([$entryId]);
 	}
 }

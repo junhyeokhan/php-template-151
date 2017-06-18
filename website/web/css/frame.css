@@ -58,35 +58,35 @@ fieldset {
 }
 
 label {
-	width: 100px;
+	width: 150px;
 	display: inline-block;
 	text-align: right;
 }
 
 input {
 	display: inline-block;
-	width: 200px;
+	width: 300px;
 }
 
 .radio {
-	margin-left: 100px;
+	margin-left: 150px;
 }
 
 .radio label {
-	width: 100px;
+	width: 150px;
 }
 
 .radio input {
-	width: 100px;
+	width: 150px;
 	margin: 0;
 }
 
 .button {
-	margin-left: 104px;
+	margin-left: 154px;
 }
 
 .button-fieldset {
-	margin-left: 128px;
+	margin-left: 178px;
 }
 
 form div {
@@ -117,4 +117,20 @@ form div {
 
 .chart-legend i {
 	margin: 0px 5px;
+}
+
+table {
+	display: block;
+	margin: 10px;
+}
+
+table th {
+	background-color: #eeeeee;
+}
+
+.submit-label{
+	width: 15px;
+	margin: 2.5px;
+	cursor: pointer;
+	color: blue;
 }

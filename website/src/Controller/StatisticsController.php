@@ -31,48 +31,56 @@ class StatisticsController
   	$statistics = array();
   	
   	$configuration = $this->configurationService->getConfiguration($email);
-  	$budgetThisMonth = $this->budgetService->getBudget($email, $year, $month);
   	
-  	//Monthly amount statistic
-  	$totalAmount = $configuration[0]['monthlyBudget'];
-  	
-  	$usedAmount = 0;
-  	
-  	foreach	($budgetThisMonth as $entry)
+  	if (count($configuration) > 0)
   	{
-  		$usedAmount += $entry['amountOfMoney'];
-  	}
+  		$budgetThisMonth = $this->budgetService->getBudget($email, $year, $month);
   	
-  	if ($totalAmount >= $usedAmount)
-  	{
-  		$freeAmount = $totalAmount - $usedAmount;
-  		$exceededAmount = 0;
+	  	//Monthly amount statistic
+	  	$totalAmount = $configuration[0]['monthlyBudget'];
+	  	
+	  	$usedAmount = 0;
+	  	
+	  	foreach	($budgetThisMonth as $entry)
+	  	{
+	  		$usedAmount += $entry['amountOfMoney'];
+	  	}
+	  	
+	  	if ($totalAmount >= $usedAmount)
+	  	{
+	  		$freeAmount = $totalAmount - $usedAmount;
+	  		$exceededAmount = 0;
+	  	}
+	  	else
+	  	{
+	  		$freeAmount = 0;
+	  		$exceededAmount = $usedAmount - $totalAmount;
+	  	}
+	  	
+	  	$statistics['monthly']['free'] = $freeAmount;
+	  	$statistics['monthly']['used'] = $usedAmount;
+	  	$statistics['monthly']['over'] = $exceededAmount;
+	  	
+	  	//Monthly category statistic  	
+	  	$allCategories = array_column($budgetThisMonth, 'name');
+	
+	  	foreach ($allCategories as $category)
+	  	{
+	  		$statistics['categories'][$category] = 0;
+		  	foreach	($budgetThisMonth as $entry)
+		  	{
+		  		if ($entry['name'] == $category)
+		  		{
+		  			$statistics['categories'][$category] += $entry['amountOfMoney'];
+		  		}
+		  	}
+	  	}
+	  	
+	  	return $statistics;
   	}
   	else
   	{
-  		$freeAmount = 0;
-  		$exceededAmount = $usedAmount - $totalAmount;
+  		header("Location: /configuration");
   	}
-  	
-  	$statistics['monthly']['free'] = $freeAmount;
-  	$statistics['monthly']['used'] = $usedAmount;
-  	$statistics['monthly']['over'] = $exceededAmount;
-  	
-  	//Monthly category statistic  	
-  	$allCategories = array_column($budgetThisMonth, 'name');
-
-  	foreach ($allCategories as $category)
-  	{
-  		$statistics['categories'][$category] = 0;
-	  	foreach	($budgetThisMonth as $entry)
-	  	{
-	  		if ($entry['name'] == $category)
-	  		{
-	  			$statistics['categories'][$category] += $entry['amountOfMoney'];
-	  		}
-	  	}
-  	}
-  	
-  	return $statistics;
   }
 }

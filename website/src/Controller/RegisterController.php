@@ -32,11 +32,6 @@ class RegisterController
   	echo $this->template->render("configuration.html.php");
   }
   
-  public function showError()
-  {
-  	echo $this->template->render("error.html.php");
-  }
-  
   public function register(array $data)
   {
   	if (!array_key_exists("email", $data) OR !array_key_exists("password", $data))
@@ -50,8 +45,8 @@ class RegisterController
   		$_SESSION["register"]["success"] = "Register succeeded!";
   		header("Location: \login");
   	} else {
-  		$_SESSION["errorMessage"]["register"] = "Register failed! Please try again!";
-  		$this->showError();
+  		$_SESSION["register"]["errorMessage"] = "Register failed! Please try again!";
+  		$this->Register();
   	}
   	
   }

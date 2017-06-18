@@ -14,6 +14,10 @@ switch($_SERVER["REQUEST_URI"]) {
 		{
 			$statistics = $factory->getStatisticsController()->getStatistics($_SESSION["user"]["email"], date("Y"), date("m"));
 		}
+		else
+		{
+			$statistics = array();
+		}
 		$factory->getIndexController()->renderHompage($statistics);
 		break;
 		
@@ -34,7 +38,7 @@ switch($_SERVER["REQUEST_URI"]) {
 		$controller = $factory->getLoginController();
 		$controller->logout();
 
-		$factory->getIndexController()->renderHompage();
+		$factory->getIndexController()->renderHompage(array());
 		break;
 		
 	case "/register":
@@ -51,7 +55,6 @@ switch($_SERVER["REQUEST_URI"]) {
 		break;
 	
 	case "/budget":
-		
 		if (isset($_SESSION["user"]))
 		{
 			$controller = $factory->getBudgetController();
@@ -61,7 +64,23 @@ switch($_SERVER["REQUEST_URI"]) {
 			}
 			else
 			{
-				$controller->saveEntry($_SESSION["user"]["email"], $_POST);
+				$submit = $_POST['submit'];
+				if (strpos($submit, 'saveEdit') !== false)
+				{
+					$controller->saveEntry($_SESSION["user"]["email"], $_POST);
+				}
+				else if (strpos($submit, 'edit') !== false)
+				{
+					$controller->editEntry(explode("-", $submit)[2]);
+				}
+				else if (strpos($submit, 'new') !== false)
+				{
+					$controller->saveEntry($_SESSION["user"]["email"], $_POST);
+				}
+				else if (strpos($submit, 'delete') !== false)
+				{
+					$controller->deleteEntry(explode("-", $submit)[2]);
+				}
 			}
 		}
 		else

@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="header">
-		<img class="logo" alt="Home" src="/image/logo.png">
+		<a href="/"><img class="logo" alt="Home" src="/image/logo.png"></a>
 	</div>
 	<div class="navigation">
 		<ul>

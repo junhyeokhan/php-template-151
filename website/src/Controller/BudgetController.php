@@ -43,7 +43,7 @@ class BudgetController
   		}
   		else
   		{
-  			$_SESSION["errorMessage"]["configuration"] = "Please define your configuration first!";
+  			$_SESSION["configuration"]["error"] = "Please define your configuration first!";
   			header("Location: /configuration");
   		}
   	}
@@ -55,12 +55,7 @@ class BudgetController
   
   public function saveEntry($email, $data)
   {
-  	$date = $data['date'];
-  	$amountOfMoney = $data['amountOfMoney'];
-  	$description = $data['description'];
-  	$categoryId = $data['category'];
-  	
-  	if ($this->budgetService->saveEntry($email, $date, $amountOfMoney, $description, $categoryId))
+  	if ($this->budgetService->saveEntry($data, $email))
   	{
   		header("Location: /budget");
   	}
@@ -68,5 +63,19 @@ class BudgetController
   	{
   	 //error	
   	}
+  }
+  
+  public function editEntry($entry_Id)
+  {
+  	$data['entry'] = $this->budgetService->getEntry($entry_Id)[0];
+  	$data['categories'] = $this->budgetService->getAllCategories();  	
+  	
+  	echo $this->template->render("editBudget.html.php", $data);
+  }
+  
+  public function deleteEntry($entry_Id)
+  {
+  	$data['categories'] = $this->budgetService->deleteEntry($entry_Id);
+  	header("Location: /budget");
   }
 }

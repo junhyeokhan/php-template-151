@@ -66,6 +66,10 @@
   	</script>
 </div>
 
+<?php 
+	if (isset($categories))
+	{
+?>
 <div class="chart-block">
 <h3>Category</h3>
 <div class="chart-legend">
@@ -101,6 +105,7 @@
 	    var monthlyCategoryChart = new Chart(monthlyCategoryCtx).Pie(data,options);
   	</script>
 </div>
+<?php } ?>
 <div class="clear"></div>
 <?php
 	} else {
