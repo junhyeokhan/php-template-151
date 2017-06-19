@@ -69,22 +69,28 @@ class LoginPdoService implements LoginServiceInterface
 		if ($query->rowCount() > 0)
 		{
 			$userId = $query->fetchColumn(0);
-			$email = $query->fetchColumn(3);
-			$password = $query->fetchColumn(4);
-			
+
 			$key = sprintf('%d%d', $userId, $timePoint);
+			
+			$url = sprintf(
+					"%s://%s/%s?key=%s",
+					isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+					$_SERVER['HTTP_HOST'],
+					"resetpassword",
+					$key
+					);
 			
 			$message = (new \Swift_Message())
 				->setSubject('[BudgetKnight] Reset password')
 				->setFrom(['junhyeokhan.it@gmail.com' => 'Junhyeok Han'])
 				->setTo([$email])
-				->setBody('You can reset your password here. Please click on the link or copy the url to move to the page. ');
+				->setBody("You can reset your password here. Please click on the link or copy the url to move to the page. $url");
 
 			$result = $this->mailer->send($message);
 			
 			//if result true
 			$query = $this->pdo->prepare("UPDATE user SET resetPoint = ? WHERE Id = ?");
-			$query->execute([$key, $userId]);
+			$query->execute([$timePoint, $userId]);
 		}
 	}
 	

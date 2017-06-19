@@ -63,8 +63,8 @@ class Factory {
 	{
 		return \Swift_Mailer::newInstance(
 			\Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, "ssl")
-			->setUsername("gibz.module.151@gmail.com")
-			->setPassword("Pe$6A+aprunu")
+			->setUsername($this->config['mailer']['user'])
+			->setPassword($this->config['mailer']['password'])
 		);
 	}
 	
