@@ -35,14 +35,13 @@ class RegisterPdoService implements RegisterServiceInterface
 			
 			$personId = $this->pdo->lastInsertId();
 			
-			$stmt = $this->pdo->prepare("INSERT INTO user (email, password, person_Id, isFirstTime) VALUES (?, ?, ?, ?)");
+			$stmt = $this->pdo->prepare("INSERT INTO user (email, password, person_Id) VALUES (?, ?, ?)");
 
 			$hash = password_hash($password, PASSWORD_DEFAULT);
 			
 			$stmt->bindValue(1, $email);
 			$stmt->bindValue(2, $hash);
 			$stmt->bindValue(3, $personId);
-			$stmt->bindValue(4, 1);
 			$stmt->execute();			
 			
 			return $stmt->rowCount() == 1;			

@@ -6,7 +6,7 @@
 	<?php
 		if (isset($_SESSION["register"]["success"])) {
 			echo $_SESSION["register"]["success"];
-		}
+		}	
 	?>
 </h2>
 <form method="POST">
@@ -20,6 +20,9 @@
 	</div>
 	<div class="button">
 		<input value="Login" type="submit" name="submit">
+	</div>
+	<div class="button">
+		<a href="/forgotpassword">Forgot Password?</a>
 	</div>
 </form>
 <?php

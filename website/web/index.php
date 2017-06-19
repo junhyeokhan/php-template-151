@@ -8,7 +8,20 @@ $config = parse_ini_file(__DIR__ . "/../config.ini", true);
 
 $factory = new junhyeokhan\Factory($config);
 
-switch($_SERVER["REQUEST_URI"]) {
+//TODO: Counter dotdotslash
+
+//If request with paramenters
+if (strpos($_SERVER["REQUEST_URI"], '?') !== false)
+{
+	$requestController = explode('?',$_SERVER["REQUEST_URI"])[0];
+	$requestParameters = explode('?',$_SERVER["REQUEST_URI"])[1];
+}
+else
+{
+	$requestController = $_SERVER["REQUEST_URI"];
+}
+
+switch($requestController) {	
 	case "/": //Homepage
 		if (isset($_SESSION["user"]))
 		{
@@ -22,15 +35,15 @@ switch($_SERVER["REQUEST_URI"]) {
 		break;
 		
 	case "/login":
-		$cnt = $factory->getLoginController();
+		$loginController = $factory->getLoginController();
 		
 		if ($_SERVER["REQUEST_METHOD"] === "GET")
 		{
-			$cnt->showLogin();
+			$loginController->showLogin();
 		}
 		else
 		{
-			$cnt->login($_POST);
+			$loginController->login($_POST);
 		}
 		break;
 		
@@ -110,33 +123,59 @@ switch($_SERVER["REQUEST_URI"]) {
 			$controller->showLogin();
 		}
 		break;
-		
-	//../../../../../../../../../etc/passwd
-	case "/weak":
-		$template = 'hello.html.php';
-		if (isset($_COOKIE['TEMPLATE']))
-   			$template = $_COOKIE['TEMPLATE'];
-		else 
-			setcookie('TEMPLATE', $template);
-		include (__DIR__ . "/../templates/" . $template);
-		break;
-		
-	case "/strong":
-		$template = 'hello.html.php';
-		if (isset($_COOKIE['TEMPLATE']))
-			$template = $_COOKIE['TEMPLATE'];
+	case "/forgotpassword":
+		{
+			$loginController = $factory->getLoginController();
+			
+			if ($_SERVER["REQUEST_METHOD"] === "GET")
+			{
+				$loginController->showForgotPassword();
+			}
 			else
-				setcookie('TEMPLATE', $template);
-		if (preg_match('#\.\./#', $template)) {
-			header("HTTP/1.1 403 Forbidden");
-			die();
+			{
+				$loginController->sendResetEmail($_POST);
+			}
 		}
-		include (__DIR__ . "/../templates/" . $template);
-		
 		break;
-		
+	case "/resetpassword":
+		{
+			$loginController = $factory->getLoginController();
+			if ($_SERVER["REQUEST_METHOD"] === "GET")
+			{
+				$email = $loginController->verifyResetHash($requestParameters);
+				
+				if (!empty($email))
+				{
+					$loginController->showResetPassword($email, $requestParameters);
+				}
+				else
+				{
+					header("HTTP/1.1 404 Not Found");
+				}
+			}
+			else
+			{
+				$email = $_POST['email'];
+				$key = $_POST['key'];
+				$password = $_POST['password'];
+				
+				$decryptedEmail = $loginController->verifyResetHash($key);
+				
+				if ($decryptedEmail == $email)
+				{
+					$loginController->updatePassword($email, $password);
+				}
+				else
+				{
+					//User edited hidden field (email or key)
+					header("HTTP/1.1 404 Not Found");
+				}
+			}
+			
+			
+		}
+		break;
 	default:
 		header("HTTP/1.1 404 Not Found");
 }
-
 ?>

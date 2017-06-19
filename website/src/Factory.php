@@ -59,14 +59,14 @@ class Factory {
 		return new SimpleTemplateEngine(__DIR__ . "/../templates/");
 	}
 	
-	/*public function getMailer()
+	public function getMailer()
 	{
 		return \Swift_Mailer::newInstance(
 			\Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, "ssl")
 			->setUsername("gibz.module.151@gmail.com")
 			->setPassword("Pe$6A+aprunu")
 		);
-	}*/
+	}
 	
 	public function getPdo()
 	{
@@ -81,7 +81,8 @@ class Factory {
 	public function getLoginService()
 	{
 		return new Service\Login\LoginPdoService(
-			$this->getPdo()		
+			$this->getPdo(),
+			$this->getMailer()
 		);
 	}
 	

@@ -81,6 +81,10 @@ input {
 	margin: 0;
 }
 
+.button-half {
+	width: 148px;
+}
+
 .button {
 	margin-left: 154px;
 }
@@ -133,4 +137,8 @@ table th {
 	margin: 2.5px;
 	cursor: pointer;
 	color: blue;
+}
+
+.hidden {
+	display: none;
 }
