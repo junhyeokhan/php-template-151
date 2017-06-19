@@ -2,22 +2,16 @@
 	include 'shared/header.html.php';
 ?>
 <h1>Configuration</h1>
-<h2>
-	Configure your budget planner.
-</h2>
-<p>
+<p class="error">
 	<?php 
 		if (isset($_SESSION["configuration"]["error"]))
 		{
 			echo $_SESSION["configuration"]["error"];
 		}
-		else
-		{
-			echo "First thing first! Please configure your budget knight! This configuration could be changed again anytime.";
-		}
 	?>
 </p>
 <form method="POST">
+	<input type="hidden" name="csrf" value="<?= $_SESSION["configuration"]["csrf"]; ?>" />
 	<fieldset>
 		<legend>Configuration</legend>
 		<div>

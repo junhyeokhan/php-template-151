@@ -54,6 +54,13 @@ class Factory {
 				$this->getBudgetService());
 	}
 	
+	public function getPasswordController()
+	{
+		return new Controller\PasswordController(
+				$this->getTemplateEngine(),
+				$this->getPasswordService());
+	}
+	
 	public function getTemplateEngine()
 	{
 		return new SimpleTemplateEngine(__DIR__ . "/../templates/");
@@ -80,28 +87,28 @@ class Factory {
 	
 	public function getLoginService()
 	{
-		return new Service\Login\LoginPdoService(
-			$this->getPdo(),
-			$this->getMailer()
-		);
+		return new Service\Login\LoginPdoService($this->getPdo());
 	}
 	
 	public function getRegisterService()
 	{
-		return new Service\Register\RegisterPdoService(
-			$this->getPdo()		
-		);
+		return new Service\Register\RegisterPdoService($this->getPdo());
 	}
 	
 	public function getConfigurationService()
 	{
-		return new Service\Configuration\ConfigurationPdoService(
-			$this->getPdo()
-		);
+		return new Service\Configuration\ConfigurationPdoService($this->getPdo());
 	}
 	
 	public function getBudgetService()
 	{
 		return new Service\Budget\BudgetPdoService($this->getPdo());
+	}
+	
+	public function getPasswordService()
+	{
+		return new Service\Password\PasswordPdoService(
+				$this->getPdo(),
+				$this->getMailer());
 	}
 }

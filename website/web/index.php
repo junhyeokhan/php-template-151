@@ -1,65 +1,57 @@
 <?php
-error_reporting(E_ALL); //PHP will show all error messages
-session_start();
+// PHP will show all error messages
+error_reporting ( E_ALL ); 
+session_start ();
 
-require_once("../vendor/autoload.php"); //Autoloading 
+// Autoloading
+require_once ("../vendor/autoload.php"); 
 
-$config = parse_ini_file(__DIR__ . "/../config.ini", true);
+$config = parse_ini_file ( __DIR__ . "/../config.ini", true );
+$factory = new junhyeokhan\Factory ( $config );
 
-$factory = new junhyeokhan\Factory($config);
-
-//TODO: Counter dotdotslash
-
-//If request with paramenters
-if (strpos($_SERVER["REQUEST_URI"], '?') !== false)
+// Prevent dot dot slash attack
+if (strpos($_SERVER["REQUEST_URI"], "../") !== false)
 {
-	$requestController = explode('?',$_SERVER["REQUEST_URI"])[0];
-	$requestParameters = explode('?',$_SERVER["REQUEST_URI"])[1];
+	header ( "HTTP/1.1 400 Bad Request" );
+}
+
+// Handle parameters
+if (strpos($_SERVER["REQUEST_URI"], '?') !== false) 
+{
+	$requestController = explode('?', $_SERVER["REQUEST_URI"])[0];
+	$requestParameters = explode('?', $_SERVER["REQUEST_URI"])[1];
 }
 else
 {
 	$requestController = $_SERVER["REQUEST_URI"];
 }
 
-switch($requestController) {	
-	case "/": //Homepage
-		if (isset($_SESSION["user"]))
-		{
-			$statistics = $factory->getStatisticsController()->getStatistics($_SESSION["user"]["email"], date("Y"), date("m"));
-		}
-		else
-		{
-			$statistics = array();
-		}
-		$factory->getIndexController()->renderHompage($statistics);
-		break;
-		
+switch ($requestController) 
+{
 	case "/login":
+		unset($_SESSION["login"]);
 		$loginController = $factory->getLoginController();
-		
 		if ($_SERVER["REQUEST_METHOD"] === "GET")
 		{
-			$loginController->showLogin();
+			$loginController->showLogin(array());
 		}
 		else
 		{
 			$loginController->login($_POST);
 		}
 		break;
-		
+	
 	case "/logout":
-		$controller = $factory->getLoginController();
-		$controller->logout();
-
-		$factory->getIndexController()->renderHompage(array());
+		unset($_SESSION['user']);
+		header("Location: /");
 		break;
-		
+	
 	case "/register":
+		unset($_SESSION["register"]);
 		$controller = $factory->getRegisterController();
-		
 		if ($_SERVER["REQUEST_METHOD"] === "GET")
 		{
-			$controller->showRegister();
+			$controller->showRegister(array());
 		}
 		else
 		{
@@ -71,111 +63,122 @@ switch($requestController) {
 		if (isset($_SESSION["user"]))
 		{
 			$controller = $factory->getBudgetController();
-			if ($_SERVER["REQUEST_METHOD"] === "GET")
+			if ($_SERVER["REQUEST_METHOD"]=== "GET") 
 			{
-				$controller->showBudget(date("Y"), date("m"));
-			}
-			else
+				$controller->showBudget(date('Y'), date('m'));
+			} 
+			else 
 			{
-				$submit = $_POST['submit'];
-				if (strpos($submit, 'saveEdit') !== false)
+				$submit = $_POST["submit"];
+				if ($submit == "new" || $submit == "save")
 				{
 					$controller->saveEntry($_SESSION["user"]["email"], $_POST);
 				}
-				else if (strpos($submit, 'edit') !== false)
+				else if (strpos($submit, "edit") !== false)
 				{
-					$controller->editEntry(explode("-", $submit)[2]);
+					$entryId = explode('-', $submit)[1];
+					$controller->editEntry($entryId);
 				}
-				else if (strpos($submit, 'new') !== false)
+				else if (strpos($submit, "edit") !== false)
 				{
-					$controller->saveEntry($_SESSION["user"]["email"], $_POST);
+					$entryId = explode('-', $submit)[1];
+					$controller->deleteEntry($entryId);
 				}
-				else if (strpos($submit, 'delete') !== false)
+				else if ($submit == "cancel")
 				{
-					$controller->deleteEntry(explode("-", $submit)[2]);
+					header("Location: /budget");
 				}
 			}
-		}
-		else
+		} 
+		else 
 		{
-			$controller = $factory->getLoginController();
-			$controller->showLogin();
-		}
-		
+			header("Location: /login");
+		}		
 		break;
-		
+	
 	case "/configuration":
 		if (isset($_SESSION["user"]))
 		{
+			unset($_SESSION["configuration"]);
 			$controller = $factory->getConfigurationController();
 			if ($_SERVER["REQUEST_METHOD"] === "GET")
 			{
-				$controller->showConfiguration();
+				$controller->showConfiguration(array());
 			}
-			else
+			else 
 			{
 				$controller->saveConfiguration($_POST);
 			}
 		}
 		else
 		{
-			$controller = $factory->getLoginController();
-			$controller->showLogin();
+			header("Location: /login");
 		}
 		break;
+		
 	case "/forgotpassword":
 		{
-			$loginController = $factory->getLoginController();
-			
-			if ($_SERVER["REQUEST_METHOD"] === "GET")
+			if (!isset($_SESSION["user"]))
 			{
-				$loginController->showForgotPassword();
+				$controller = $factory->getPasswordController();
+				if ($_SERVER["REQUEST_METHOD"] === "GET")
+				{
+					$controller->showForgotPassword();
+				}
+				else
+				{
+					$controller->sendResetEmail($_POST);
+				}
 			}
 			else
 			{
-				$loginController->sendResetEmail($_POST);
+				header("Location: /");
 			}
 		}
 		break;
+		
 	case "/resetpassword":
 		{
-			$loginController = $factory->getLoginController();
-			if ($_SERVER["REQUEST_METHOD"] === "GET")
+			if (!isset($_SESSION["user"]))
 			{
-				$email = $loginController->verifyResetHash($requestParameters);
-				
-				if (!empty($email))
+				$controller = $factory->getPasswordController();
+				if ($_SERVER["REQUEST_METHOD"] === "GET") 
 				{
-					$loginController->showResetPassword($email, $requestParameters);
+					$email = $controller->verifyResetHash($requestParameters);
+					if (!empty($email))
+					{
+						$controller->showResetPassword($email, $requestParameters);
+					}
+					else 
+					{
+						header ( "HTTP/1.1 400 Bad Request");
+					}
 				}
 				else
 				{
-					header("HTTP/1.1 404 Not Found");
+					$dbEmail = $controller->verifyResetHash($_POST["key"]);
+				
+					if ($dbEmail == $_POST["email"])
+					{
+						$controller->updatePassword($_POST["email"], $_POST["password"]);
+					}
+					else
+					{
+						header ( "HTTP/1.1 400 Bad Request");
+					}
 				}
 			}
-			else
-			{
-				$email = $_POST['email'];
-				$key = $_POST['key'];
-				$password = $_POST['password'];
-				
-				$decryptedEmail = $loginController->verifyResetHash($key);
-				
-				if ($decryptedEmail == $email)
-				{
-					$loginController->updatePassword($email, $password);
-				}
-				else
-				{
-					//User edited hidden field (email or key)
-					header("HTTP/1.1 404 Not Found");
-				}
-			}
-			
-			
 		}
 		break;
-	default:
-		header("HTTP/1.1 404 Not Found");
+		
+	default: 
+		// Homepage
+		$statistics = array();
+		if (isset($_SESSION ["user"]))
+		{
+			$statistics = $factory->getStatisticsController()->getStatistics($_SESSION["user"]["email"], date( 'Y' ), date('m'));
+		}
+		$factory->getIndexController()->renderHompage($statistics);
+		break;
 }
 ?>

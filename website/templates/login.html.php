@@ -2,21 +2,23 @@
 	include 'shared/header.html.php';
 ?>
 <h1>Login</h1>
-<h2>
-	<?php
-		if (isset($_SESSION["register"]["success"])) {
-			echo $_SESSION["register"]["success"];
-		}	
+<p class="error">
+	<?php 
+		if(isset($_SESSION["login"]["error"]))
+		{
+			echo $_SESSION["login"]["error"];
+		}
 	?>
-</h2>
+<p>
 <form method="POST">
+	<input type="hidden" name="csrf" value="<?= $_SESSION["login"]["csrf"]; ?>" />
 	<div>
 		<label>Email: </label>
-		<input type="email" name="email">
+		<input type="email" name="email" value="<?php if (isset($email)) { echo $email; } ?>" >
 	</div>
 	<div>
 		<label>Password: </label>
-		<input type="password" name="password">
+		<input type="password" name="password" value="<?php if (isset($password)) { echo $password; } ?>" >
 	</div>
 	<div class="button">
 		<input value="Login" type="submit" name="submit">

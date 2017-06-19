@@ -42,8 +42,8 @@
 		</select>
 		</div>
 	</fieldset>
-	<button class="button-fieldset" type="submit" name="submit" value="saveEdit">Save</button>
-	<button type="submit" name="submit" value="cancelEdit">Cancel</button>
+	<button class="button-fieldset" type="submit" name="submit" value="save">Save</button>
+	<button type="submit" name="submit" value="cancel">Cancel</button>
 </form>
 <?php
 	include 'shared/footer.html.php';

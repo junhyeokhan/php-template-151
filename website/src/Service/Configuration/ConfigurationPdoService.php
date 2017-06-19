@@ -2,16 +2,10 @@
 
 namespace junhyeokhan\Service\Configuration;
 
-class ConfigurationPdoService implements ConfigurationServiceInterface
+class ConfigurationPdoService implements ConfigurationServiceInterface 
 {
-	/**
-	 * @var \PDO
-	 */
 	private $pdo;
 	
-	/**
-	 * @param \PDO
-	 */
 	public function __construct(\PDO $pdo)
 	{
 		$this->pdo = $pdo;
@@ -19,53 +13,54 @@ class ConfigurationPdoService implements ConfigurationServiceInterface
 	
 	public function getConfiguration($email)
 	{
-		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE email=?");
-		$stmt->execute([$email]);
-		if ($stmt->rowCount() > 0)
+		$query = $this->pdo->prepare("SELECT * FROM user WHERE email=?");
+		$query->execute([$email]);
+		
+		if ($query->rowCount() > 0)
 		{
-			$userId = $stmt->fetchColumn(0);
-				
-			$stmt = $this->pdo->prepare("SELECT * FROM configuration WHERE user_Id=?");
-			$stmt->execute([$userId]);
+			$userId = $query->fetchColumn(0);
 			
-			return $stmt->fetchAll();
+			$query = $this->pdo->prepare("SELECT * FROM configuration WHERE user_Id=?");
+			$query->execute([$userId]);
+			
+			return $query->fetchAll();
 		}
 		else
 		{
-			//error message
+			$_SESSION["configuration"]["error"] = "User is not found!";
 		}
 	}
 	
 	public function saveConfiguration($email, $monthlyBudget, $resetType, $resetDate)
 	{
-		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE email = ?");
-		$stmt->execute([$email]);
+		$query = $this->pdo->prepare("SELECT * FROM user WHERE email=?");
+		$query->execute([$email]);
 		
-		if ($stmt->rowCount() > 0)
+		if ($query->rowCount() > 0)
 		{
-			$userId = $stmt->fetchColumn(0);
+			$userId = $query->fetchColumn(0);
 			
-			$stmt = $this->pdo->prepare("SELECT * FROM configuration WHERE user_Id=?");
-			$stmt->execute([$userId]);
+			$query = $this->pdo->prepare("SELECT * FROM configuration WHERE user_Id=?");
+			$query->execute([$userId]);
 			
-			//Configuration is existing
-			if ($stmt->rowCount() > 0)
+			$configuration = $query->fetchAll();
+			
+			if (count($configuration) > 0)
 			{
-				//Edit the configuration
-				$stmt = $this->pdo->prepare("UPDATE configuration SET monthlyBudget=?, resetType=?, resetDate=? WHERE user_Id=?");
-				$stmt->execute([floatval($monthlyBudget), $resetType, $resetDate, $userId]);
+				$query = $this->pdo->prepare("UPDATE configuration SET monthlyBudget=?, resetType=?, resetDate=? WHERE user_Id=?");
+				$query->execute([floatval($monthlyBudget), $resetType, $resetDate, $userId]);
 			}
-			//Configuration is not existing yet
 			else
 			{
-				//Create the configuration
-				$stmt = $this->pdo->prepare("INSERT INTO configuration (user_Id, monthlyBudget, resetType, resetDate) VALUES (?, ?, ?, ?)");
-				$stmt->execute([$userId, floatval($monthlyBudget), $resetType, $resetDate]);
+				$query = $this->pdo->prepare("INSERT INTO configuration (user_Id, monthlyBudget, resetType, resetDate) VALUES (?, ?, ?, ?)");
+				$query->execute([$userId, floatval($monthlyBudget), $resetType, $resetDate]);
 			}
+		
+			return $query->rowCount() == 0;
 		}
 		else
 		{
-			//error
-		}		
+			$_SESSION["configuration"]["error"] = "User is not found!";
+		}
 	}
 }

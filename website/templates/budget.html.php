@@ -43,9 +43,9 @@
 						
 						echo "<td>";
 						echo "<label class=\"submit-label\" for=\"edit-submit-"; echo $entry['entry_Id']; echo "\"><i class=\"fa fa-pencil\"></i></label>";
-						echo "<input id=\"edit-submit-"; echo $entry['entry_Id']; echo "\" style=\"display:none;\" type=\"submit\" value=\"edit-submit-"; echo $entry['entry_Id']; echo "\" name=\"submit\" />";
+						echo "<input id=\"edit-submit-"; echo $entry['entry_Id']; echo "\" style=\"display:none;\" type=\"submit\" value=\"edit-"; echo $entry['entry_Id']; echo "\" name=\"submit\" />";
 						echo "<label class=\"submit-label\" for=\"delete-submit-"; echo $entry['entry_Id']; echo "\"><i class=\"fa fa-trash\"></i></label>";
-						echo "<input id=\"delete-submit-"; echo $entry['entry_Id']; echo "\" style=\"display:none;\" type=\"submit\" value=\"delete-submit-"; echo $entry['entry_Id']; echo "\" name=\"submit\" />";
+						echo "<input id=\"delete-submit-"; echo $entry['entry_Id']; echo "\" style=\"display:none;\" type=\"submit\" value=\"delete-"; echo $entry['entry_Id']; echo "\" name=\"submit\" />";
 						echo "</td>";
 					echo "</tr>";
 				}
@@ -86,7 +86,7 @@
 			</select>
 			</div>
 		</fieldset>
-		<button class="button-fieldset" type="submit" name="submit" value="newEntry">Save</button>
+		<button class="button-fieldset" type="submit" name="submit" value="new">Save</button>
 	</form>
 <?php 
 	include 'shared/footer.html.php';
