@@ -30,19 +30,21 @@ class PasswordController
 		}
 		else
 		{
-			$this->passwordService->sendResetEmail($data["email"]);
-			header ( "Location: /login" );
+			if ($this->passwordService->sendResetEmail($data["email"]))
+			{
+				header ( "Location: /login" );
+			}
+			else
+			{
+				$_SESSION["forgotpassword"]["error"] = "Sending link failed! Please try again! <br />";
+				$this->showForgotPassword();
+			}
 		}
 	}
 	
-	public function verifyResetHash($requestParameters)
+	public function verifyResetHash($key)
 	{
-		if (strpos($requestParameters, "key=") !== false)
-		{
-			$key = explode("key=", $requestParameters)[1];
-			
-			return $this->passwordService->getEmailByResetKey($key);
-		}
+		return $this->passwordService->getEmailByResetKey($key);
 	}
 	
 	public function showResetPassword($email, $key)

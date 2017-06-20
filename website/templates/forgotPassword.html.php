@@ -3,6 +3,15 @@
 ?>
 <h1>Reset Password</h1>
 <h2></h2>
+<p class="error">
+	<?php 
+		if(isset($_SESSION["forgotpassword"]["error"]))
+		{
+			echo $_SESSION["forgotpassword"]["error"];
+		}
+	?>
+</p>
+
 <p>Link for resetting password will be sent via an email.</p>
 
 <form method="POST">

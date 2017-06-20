@@ -11,7 +11,7 @@
 	?>
 <p>
 <form method="POST">
-	<input type="hidden" name="csrf" value="<?= $_SESSION["login"]["csrf"]; ?>" />
+	<input type="hidden" name="csrf" value="<?= $_SESSION["csrf"]; ?>" />
 	<div>
 		<label>Email: </label>
 		<input type="email" name="email" value="<?php if (isset($email)) { echo $email; } ?>" >

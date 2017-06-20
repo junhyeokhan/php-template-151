@@ -35,10 +35,17 @@ class PasswordPdoService implements PasswordServiceInterface
 				->setBody("You can reset your password here. Please click on the link or copy the url to move to the page. $url"
 			);
 			
-			$this->mailer->send($message);
-			
-			$query = $this->pdo->prepare("UPDATE user SET resetPoint = ? WHERE Id = ?");
-			$query->execute([$timePoint, $userId]);
+			if ($this->mailer->send($message) == 1)
+			{
+				$query = $this->pdo->prepare("UPDATE user SET resetPoint = ? WHERE Id = ?");
+				$query->execute([$timePoint, $userId]);
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 	

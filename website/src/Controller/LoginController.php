@@ -18,13 +18,13 @@ class LoginController
 	
 	public function showLogin(array $data)
 	{
-		$_SESSION["login"]["csrf"] = bin2hex(random_bytes(50));
+		$_SESSION["csrf"] = bin2hex(random_bytes(50));
 		echo $this->template->render("login.html.php", $data);
 	}
 	
 	public function login(array $data)
 	{
-		if ($_SESSION["register"]["csrf"] == $data["csrf"])
+		if ($_SESSION["csrf"] == $data["csrf"])
 		{
 			// Someone might try hacking -> No hint but the page will be given again
 			if (!array_key_exists("email", $data) OR !array_key_exists ("password", $data))

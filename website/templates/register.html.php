@@ -11,7 +11,7 @@
 	?>
 </p>
 <form method="POST">
-	<input type="hidden" name="csrf" value="<?= $_SESSION["register"]["csrf"]; ?>" />
+	<input type="hidden" name="csrf" value="<?= $_SESSION["csrf"]; ?>" />
 	<fieldset>
 		<legend>Account information:</legend>
 		<div>

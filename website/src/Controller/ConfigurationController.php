@@ -16,9 +16,8 @@ class ConfigurationController
 		$this->configurationService = $configurationService;
 	}
 	
-	public function showConfiguration($data) 
+	public function showConfiguration() 
 	{
-		$_SESSION["configuration"]["csrf"] = bin2hex(random_bytes(50));		
 		if (isset($_SESSION["user"]["email"]))
 		{
 			$configuration = $this->configurationService->getConfiguration($_SESSION["user"]["email"]);
@@ -29,7 +28,7 @@ class ConfigurationController
 			}
 			else
 			{
-				echo $this->template->render("configuration.html.php", $data);
+				echo $this->template->render("configuration.html.php", array());
 			}
 		}
 		else
@@ -40,63 +39,65 @@ class ConfigurationController
 	
 	public function saveConfiguration(array $data)
 	{
-		if ($_SESSION["configuration"]["csrf"] == $data["csrf"])
+		if (!isset($_SESSION["user"]["email"]))
 		{
-			if (!isset($_SESSION["user"]["email"]))
+			header("Location: /login");
+		}
+		else
+		{
+			$email = $_SESSION ["user"]["email"];
+			if (isset($data["monthlyBudget"]) && isset($data["resetType"]))
 			{
-				header("Location: /login");
+				$monthlyBudget = $data["monthlyBudget"];
+				$resetType = $data["resetType"];
+				$resetDate = 0;
+		
+				if (isset($data['resetDate']))
+				{
+					$resetDate = $data['resetDate'];
+				}
+		
+				$errorMessage = '';
+				if (floatval($monthlyBudget) <= 0)
+				{
+					$errorMessage .= "Invalid number for monthly budget is entered! <br />";
+				}
+				if ($resetType == 'userDate' && $resetDate == 0)
+				{
+					$errorMessage .= "Reset date is not entered! <br />";
+				}
+				if ($resetDate < 1 || $resetDate > 28)
+				{
+					$errorMessage .= "Reset date is out of range! <br />";
+				}
+		
+				if (!empty($errorMessage))
+				{
+					$_SESSION["configuration"]["error"] = $errorMessage;
+					$this->showConfiguration($data);
+					return 0;
+				}
+		
+				if ($this->configurationService->saveConfiguration(
+						htmlentities($email),
+						htmlentities($monthlyBudget),
+						htmlentities($resetType),
+						htmlentities($resetDate)))
+				{
+					header("Location: /configuration");
+				}
+				else
+				{
+					$this->showConfiguration($data);
+					return 0;
+				}
 			}
 			else
 			{
-				$email = $_SESSION ["user"]["email"];
-				if (isset($data["monthlyBudget"]) && isset($data["resetType"]))
-				{
-					$monthlyBudget = $data["monthlyBudget"];
-					$resetType = $data["resetType"];
-					$resetDate = 0;
-					
-					if (isset($data['resetDate']))
-					{
-						$resetDate = $data['resetDate'];
-					}
-					
-					$errorMessage = '';				
-					if (floatval($monthlyBudget) <= 0)
-					{
-						$errorMessage .= "Invalid number for monthly budget is entered! <br />";
-					}
-					if ($resetType == 'userDate' && $resetDate == 0)
-					{
-						$errorMessage .= "Reset date is not entered! <br />";
-					}
-					
-					if (!empty($errorMessage))
-					{
-						$_SESSION["configuration"]["error"] = $errorMessage;
-						$this->showConfiguration($data);
-						return 0;
-					}
-					
-					if ($this->configurationService->saveConfiguration(
-							htmlentities($email), 
-							htmlentities($monthlyBudget), 
-							htmlentities($resetType), 
-							htmlentities($resetDate)))
-					{
-						header("Location: /configuration");
-					}
-					else
-					{
-						$this->showConfiguration($data);
-						return 0;
-					}
-				}
-				else 
-				{
-					$_SESSION["configuration"]["error"] = "Please enter monthly budget and select reset type!";
-					return 0;
-				}
-	  		}
+				$_SESSION["configuration"]["error"] = "Please enter monthly budget and select reset type!";
+				return 0;
+			}
+		
 		}
 	}
 }

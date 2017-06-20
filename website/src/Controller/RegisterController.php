@@ -17,13 +17,13 @@ class RegisterController
 	
 	public function showRegister($data)
 	{
-		$_SESSION["register"]["csrf"] = bin2hex(random_bytes(50));
+		$_SESSION["csrf"] = bin2hex(random_bytes(50));
 		echo $this->template->render("register.html.php", $data);
 	}
 	
 	public function register(array $data)
 	{
-		if ($_SESSION["register"]["csrf"] == $data["csrf"])
+		if ($_SESSION["csrf"] == $data["csrf"])
 		{
 			// Someone might try hacking -> No hint but the page will be given again
 			if (!array_key_exists ("email", $data) OR 

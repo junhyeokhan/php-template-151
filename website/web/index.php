@@ -15,18 +15,9 @@ if (strpos($_SERVER["REQUEST_URI"], "../") !== false)
 	header ( "HTTP/1.1 400 Bad Request" );
 }
 
-// Handle parameters
-if (strpos($_SERVER["REQUEST_URI"], '?') !== false) 
-{
-	$requestController = explode('?', $_SERVER["REQUEST_URI"])[0];
-	$requestParameters = explode('?', $_SERVER["REQUEST_URI"])[1];
-}
-else
-{
-	$requestController = $_SERVER["REQUEST_URI"];
-}
+$request = $uri_parts = explode('?', $_SERVER['REQUEST_URI'])[0];
 
-switch ($requestController) 
+switch ($request) 
 {
 	case "/login":
 		unset($_SESSION["login"]);
@@ -42,7 +33,7 @@ switch ($requestController)
 		break;
 	
 	case "/logout":
-		unset($_SESSION['user']);
+		unset($_SESSION["user"]);
 		header("Location: /");
 		break;
 	
@@ -97,13 +88,14 @@ switch ($requestController)
 		break;
 	
 	case "/configuration":
+		unset($_SESSION["configuration"]);
 		if (isset($_SESSION["user"]))
 		{
-			unset($_SESSION["configuration"]);
 			$controller = $factory->getConfigurationController();
+			
 			if ($_SERVER["REQUEST_METHOD"] === "GET")
 			{
-				$controller->showConfiguration(array());
+				$controller->showConfiguration();
 			}
 			else 
 			{
@@ -144,10 +136,10 @@ switch ($requestController)
 				$controller = $factory->getPasswordController();
 				if ($_SERVER["REQUEST_METHOD"] === "GET") 
 				{
-					$email = $controller->verifyResetHash($requestParameters);
+					$email = $controller->verifyResetHash($_GET["key"]);
 					if (!empty($email))
 					{
-						$controller->showResetPassword($email, $requestParameters);
+						$controller->showResetPassword($email, $_GET["key"]);
 					}
 					else 
 					{

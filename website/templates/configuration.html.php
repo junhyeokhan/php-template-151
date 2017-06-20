@@ -11,7 +11,6 @@
 	?>
 </p>
 <form method="POST">
-	<input type="hidden" name="csrf" value="<?= $_SESSION["configuration"]["csrf"]; ?>" />
 	<fieldset>
 		<legend>Configuration</legend>
 		<div>
