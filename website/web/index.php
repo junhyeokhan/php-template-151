@@ -70,7 +70,7 @@ switch ($request)
 					$entryId = explode('-', $submit)[1];
 					$controller->editEntry($entryId);
 				}
-				else if (strpos($submit, "edit") !== false)
+				else if (strpos($submit, "delete") !== false)
 				{
 					$entryId = explode('-', $submit)[1];
 					$controller->deleteEntry($entryId);
