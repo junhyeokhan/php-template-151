@@ -45,6 +45,7 @@ class LoginPdoService implements LoginServiceInterface
 			}
 			else
 			{
+				$_SESSION["login"]["error"] = "Wrong password!";
 				return false;
 			}
 		}

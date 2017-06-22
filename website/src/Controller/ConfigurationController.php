@@ -66,7 +66,7 @@ class ConfigurationController
 				{
 					$errorMessage .= "Reset date is not entered! <br />";
 				}
-				if ($resetDate < 1 || $resetDate > 28)
+				if ($resetType == 'userDate' && $resetDate < 1 || $resetDate > 28)
 				{
 					$errorMessage .= "Reset date is out of range! <br />";
 				}

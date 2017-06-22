@@ -47,7 +47,6 @@
 		    {
 		    	var inputDate = document.getElementsByName('resetDate');
 		    	inputDate[0].disabled = this.value != "userDate";
-				    
 		    }
 	    };
 	}
