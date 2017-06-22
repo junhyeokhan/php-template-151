@@ -51,7 +51,7 @@ class LoginPdoService implements LoginServiceInterface
 		}
 		else
 		{
-			$_SESSION["login"]["error"] = "No account with enetered email is found!";
+			$_SESSION["login"]["error"] = "No account with entered email is found!";
 			return false;
 		}
 	}

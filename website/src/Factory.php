@@ -61,6 +61,13 @@ class Factory {
 				$this->getPasswordService());
 	}
 	
+	public function getAccountController()
+	{
+		return new Controller\AccountController(
+				$this->getTemplateEngine(),
+				$this->getAccountService());
+	}
+	
 	public function getTemplateEngine()
 	{
 		return new SimpleTemplateEngine(__DIR__ . "/../templates/");
@@ -110,5 +117,10 @@ class Factory {
 		return new Service\Password\PasswordPdoService(
 				$this->getPdo(),
 				$this->getMailer());
+	}
+	
+	public function getAccountService()
+	{
+		return new Service\Account\AccountPdoService($this->getPdo());
 	}
 }

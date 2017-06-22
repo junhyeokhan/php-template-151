@@ -156,13 +156,41 @@ switch ($request)
 					}
 					else
 					{
-						header ( "HTTP/1.1 400 Bad Request");
+						header ("HTTP/1.1 400 Bad Request");
 					}
 				}
 			}
 		}
 		break;
-		
+	case "/deleteaccount":
+		{
+			unset($_SESSION["deleteaccount"]);
+			if (isset($_SESSION["user"]))
+			{
+				$controller = $factory->getAccountController();
+				if ($_SERVER["REQUEST_METHOD"] === "GET") 
+				{
+					$controller->showDeleteAccount();
+				}	
+				else 
+				{
+					if ($controller->deleteAccount($_SESSION["user"]["email"], $_POST["password"]))
+					{
+						unset($_SESSION["user"]);
+						header ("Location: /");
+					}
+					else
+					{
+						$controller->showDeleteAccount();
+					}
+				}		
+			}
+			else
+			{
+				header ("Location: /Login");
+			}
+		}
+		break;
 	default: 
 		// Homepage
 		$statistics = array();

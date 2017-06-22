@@ -1,4 +1,4 @@
-<?php
+ <?php
 	include 'shared/header.html.php';
 ?>
 <h1>Configuration</h1>
@@ -39,6 +39,9 @@
 	</fieldset>
 	<input class="button-fieldset" value="Save" type="submit" name="submit">
 </form>
+<div class="button-fieldset">
+	<a href="/deleteaccount">Delete account?</a>
+</div>
 <script>
 	var rad = document.getElementsByName('resetType');
 	for(var i = 0; i < rad.length; i++) {
